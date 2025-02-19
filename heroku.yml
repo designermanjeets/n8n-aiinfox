@@ -4,13 +4,20 @@ build:
 
 run:
   web:
+    image: n8nio/n8n:latest
     command: ["n8n", "start"]
 
   worker:
-    command: ["sh", "-c", "n8n import:credentials --separate --input=/backup/credentials && n8n import:workflow --separate --input=/backup/workflows"]
+    image: n8nio/n8n:latest
+    command:
+      - sh
+      - -c
+      - n8n import:credentials --separate --input=/backup/credentials && n8n import:workflow --separate --input=/backup/workflows
 
   ollama:
+    image: ollama/ollama:latest
     command: ["ollama", "serve"]
 
   qdrant:
+    image: qdrant/qdrant
     command: ["qdrant"]
