@@ -5,45 +5,12 @@ build:
 run:
   web:
     command: ["n8n", "start"]
-    env:
-      DB_TYPE: postgresdb
-      DB_POSTGRESDB_HOST: ${DATABASE_URL}
-      N8N_DIAGNOSTICS_ENABLED: false
-      N8N_PERSONALIZATION_ENABLED: false
-      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
-      N8N_USER_MANAGEMENT_JWT_SECRET: ${N8N_USER_MANAGEMENT_JWT_SECRET}
-      OLLAMA_HOST: http://ollama:11434
 
   worker:
     command: ["sh", "-c", "n8n import:credentials --separate --input=/backup/credentials && n8n import:workflow --separate --input=/backup/workflows"]
-    env:
-      DB_TYPE: postgresdb
-      DB_POSTGRESDB_HOST: ${DATABASE_URL}
-    mounts:
-      - source: /data
-        target: /backup
-        type: bind
-
-  qdrant:
-    command: ["qdrant"]
-    env:
-      DATABASE_URL: ${DATABASE_URL}
-    mounts:
-      - source: /data
-        target: /qdrant/storage
-        type: bind
 
   ollama:
     command: ["ollama", "serve"]
-    env:
-      OLLAMA_HOST: "0.0.0.0:11434"
-    mounts:
-      - source: /data
-        target: /root/.ollama
-        type: bind
 
-release:
-  command:
-    - "sh"
-    - "-c"
-    - "echo 'Running database migrations (if needed)...'"
+  qdrant:
+    command: ["qdrant"]
